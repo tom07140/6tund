@@ -14,7 +14,7 @@
 		$stmt->bind_result($id, $user_id_from_database, $number_plate, $color);
 		$stmt->execute();
 		
-		$row = 0;
+		$row = 1;
 		
 		// tee midagi seni, kuni saame ab'st ühe rea andmeid
 		while($stmt->fetch()){
