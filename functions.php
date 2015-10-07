@@ -10,7 +10,7 @@
 		
 		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
 		
-		$stmt = $mysqli->prepare("SELECT id, user_id, number_plate, color FROM car_plates");
+		$stmt = $mysqli->prepare("SELECT id, user_id, number_plate, color FROM car_plates WHERE deleted IS NULL");
 		$stmt->bind_result($id, $user_id_from_database, $number_plate, $color);
 		$stmt->execute();
 		
@@ -25,6 +25,8 @@
 			$car = new StdClass();
 			$car->id = $id;
 			$car->plate = $number_plate;
+			$car->color = $color;
+			$car->user_id = $user_id_from_database;
 			
 			// lisan massiivi ühe rea juurde
 			array_push($car_array, $car);
@@ -41,7 +43,24 @@
 		$mysqli->close();
 	}
 	
-
+	function deleteCar($id){
+		
+		$mysqli = new mysqli($GLOBALS["servername"], $GLOBALS["server_username"], $GLOBALS["server_password"], $GLOBALS["database"]);
+		
+		$stmt = $mysqli->prepare("UPDATE car_plates SET deleted=NOW() WHERE id=?");
+		$stmt->bind_param("i", $id);
+		if($stmt->execute()){
+			// sai kustutatud
+			// kustutame aadressirea tühjaks
+			header("Location: table.php");
+			
+		}
+		
+		$stmt->close();
+		$mysqli->close();
+	}
+	
+	
 	
 	
 ?>
